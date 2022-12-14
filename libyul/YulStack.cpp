@@ -232,9 +232,10 @@ YulStack::assembleWithDeployed(std::optional<std::string_view> _deployName) cons
 	creationObject.bytecode = std::make_shared<evmasm::LinkerObject>(creationAssembly->assemble());
 	yulAssert(creationObject.bytecode->immutableReferences.empty(), "Leftover immutables.");
 	creationObject.assembly = creationAssembly->assemblyString(m_debugInfoSelection);
+	// TODO: fix for EOF
 	creationObject.sourceMappings = std::make_unique<std::string>(
 		evmasm::AssemblyItem::computeSourceMapping(
-			creationAssembly->items(),
+			creationAssembly->codeSections().front().items,
 			{{m_charStream->name(), 0}}
 		)
 	);
@@ -244,9 +245,10 @@ YulStack::assembleWithDeployed(std::optional<std::string_view> _deployName) cons
 	{
 		deployedObject.bytecode = std::make_shared<evmasm::LinkerObject>(deployedAssembly->assemble());
 		deployedObject.assembly = deployedAssembly->assemblyString(m_debugInfoSelection);
+		// TODO: fix for EOF
 		deployedObject.sourceMappings = std::make_unique<std::string>(
 			evmasm::AssemblyItem::computeSourceMapping(
-				deployedAssembly->items(),
+				deployedAssembly->codeSections().front().items,
 				{{m_charStream->name(), 0}}
 			)
 		);
