@@ -92,6 +92,9 @@ enum class Instruction: uint8_t
 	BLOBHASH = 0x49,          ///< get a versioned hash of one of the blobs associated with the transaction
 	BLOBBASEFEE = 0x4a,       ///< get the block's blob basefee
 
+	MCOPY = 0x5e,             ///< copy between memory areas
+	JUMPDEST,                 ///< set a potential jump destination
+
 	POP = 0x50,               ///< remove item from stack
 	MLOAD,                    ///< load word from memory
 	MSTORE,                   ///< save word to memory
@@ -104,11 +107,13 @@ enum class Instruction: uint8_t
 	MSIZE,                    ///< get the size of active memory
 	GAS,                      ///< get the amount of available gas
 	JUMPDEST,                 ///< set a potential jump destination
-	MCOPY = 0x5e,             ///< copy between memory areas
+	RJUMP,
+	RJUMPI,
+	RJUMPV,
 
 	TLOAD = 0x5c,             ///< load word from transient storage
 	TSTORE = 0x5d,            ///< save word to transient storage
-
+	MCOPY = 0x5e,             ///< copy between memory areas
 	PUSH0 = 0x5f,             ///< place the value 0 on stack
 	PUSH1 = 0x60,             ///< place 1 byte item on stack
 	PUSH2,                    ///< place 2 byte item on stack
