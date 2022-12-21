@@ -954,7 +954,7 @@ LinkerObject const& Assembly::assemble() const
 	auto setDataSectionSize = [&](size_t _size) {
 		assertThrow(dataSectionSizeOffset.has_value(), AssemblyException, "");
 		assertThrow(_size <= 0xFFFF, AssemblyException, "");
-		toBigEndian(static_cast<uint16_t>(_size), bytesRef(ret.bytecode.data() + *dataSectionSizeOffset, 2));
+		toBigEndian(_size, bytesRef(ret.bytecode.data() + *dataSectionSizeOffset, 2));
 	};
 	if (eof)
 	{
@@ -1341,8 +1341,7 @@ LinkerObject const& Assembly::assemble() const
 				AssemblyException,
 				"Relative jump too far"
 			);
-			uint16_t relativeOffset = static_cast<uint16_t>(pos - (bytecodeOffset + 2u));
-			toBigEndian(relativeOffset, bytesRef(ret.bytecode.data() + bytecodeOffset, 2));
+			toBigEndian(pos - (bytecodeOffset + 2u), bytesRef(ret.bytecode.data() + bytecodeOffset, 2));
 		}
 		else
 		{
