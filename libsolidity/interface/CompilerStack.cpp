@@ -831,7 +831,8 @@ evmasm::AssemblyItems const* CompilerStack::assemblyItems(std::string const& _co
 		solThrow(CompilerError, "Compilation was not successful.");
 
 	Contract const& currentContract = contract(_contractName);
-	solAssert(currentContract.evmAssembly->codeSections().size() == 1, "Expected a single code section in legacy codegen.");
+	if (currentContract.evmAssembly)
+		solAssert(currentContract.evmAssembly->codeSections().size() == 1, "Expected a single code section in legacy codegen.");
 	return currentContract.evmAssembly ? &currentContract.evmAssembly->codeSections().front().items : nullptr;
 }
 
@@ -841,7 +842,8 @@ evmasm::AssemblyItems const* CompilerStack::runtimeAssemblyItems(std::string con
 		solThrow(CompilerError, "Compilation was not successful.");
 
 	Contract const& currentContract = contract(_contractName);
-	solAssert(currentContract.evmRuntimeAssembly->codeSections().size() == 1, "Expected a single code section in legacy codegen.");
+	if (currentContract.evmRuntimeAssembly)
+		solAssert(currentContract.evmRuntimeAssembly->codeSections().size() == 1, "Expected a single code section in legacy codegen.");
 	return currentContract.evmRuntimeAssembly ? &currentContract.evmRuntimeAssembly->codeSections().front().items : nullptr;
 }
 
