@@ -5,6 +5,7 @@ Language Features:
 
 
 Compiler Features:
+ * Yul IR Code Generation: Cheaper code for reverting with errors of a static small encoding size.
 
 
 Bugfixes:
