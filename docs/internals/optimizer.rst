@@ -888,7 +888,12 @@ Prerequisites: Disambiguator, ForLoopInitRewriter.
 LiteralRematerialiser
 ^^^^^^^^^^^^^^^^^^^^^
 
-To be documented.
+If a variable referenced in an expression is known to have a literal value, replaces that use of
+the variable with the literal.
+
+This is mostly used so that other components do not have to rely on the DataflowAnalyzer.
+
+Prerequisites: Disambiguator, ForLoopInitRewriter.
 
 .. _load-resolver:
 
