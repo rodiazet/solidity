@@ -407,6 +407,7 @@ void DeclarationTypeChecker::endVisit(VariableDeclaration const& _variable)
 			{
 				case Location::Memory: return "\"memory\"";
 				case Location::Storage: return "\"storage\"";
+				case Location::Transient: return "\"transient\"";
 				case Location::CallData: return "\"calldata\"";
 				case Location::Unspecified: return "none";
 			}
@@ -456,8 +457,18 @@ void DeclarationTypeChecker::endVisit(VariableDeclaration const& _variable)
 	}
 	else if (_variable.isStateVariable())
 	{
-		solAssert(varLoc == Location::Unspecified, "");
-		typeLoc = (_variable.isConstant() || _variable.immutable()) ? DataLocation::Memory : DataLocation::Storage;
+		switch (varLoc)
+		{
+			case Location::Unspecified:
+				typeLoc = (_variable.isConstant() || _variable.immutable()) ? DataLocation::Memory : DataLocation::Storage;
+				break;
+			case Location::Transient:
+				solAssert(false, "Transient storage type checking not implemented yet");
+				break;
+			default:
+				solAssert(false, "");
+				break;
+		}
 	}
 	else if (
 		dynamic_cast<StructDefinition const*>(_variable.scope()) ||
@@ -476,6 +487,9 @@ void DeclarationTypeChecker::endVisit(VariableDeclaration const& _variable)
 				break;
 			case Location::CallData:
 				typeLoc = DataLocation::CallData;
+				break;
+			case Location::Transient:
+				solAssert(false, "Transient storage type checking not implemented yet");
 				break;
 			case Location::Unspecified:
 				solAssert(!_variable.hasReferenceOrMappingType(), "Data location not properly set.");

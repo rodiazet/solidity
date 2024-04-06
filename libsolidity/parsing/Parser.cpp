@@ -899,6 +899,23 @@ ASTPointer<VariableDeclaration> Parser::parseVariableDeclaration(
 	{
 		nodeFactory.markEndPosition();
 		tie(identifier, nameLocation) = expectIdentifierWithLocation();
+		if (
+			*identifier == "transient" &&
+			m_scanner->currentToken() == Token::Identifier &&
+			(
+				_options.allowLocationSpecifier ||
+				_options.kind == VarDeclKind::State
+			)
+		)
+		{
+			if (location != VariableDeclaration::Location::Unspecified)
+				parserError(ErrorId{3548}, "Location already specified.");
+			else
+				location = VariableDeclaration::Location::Transient;
+
+			nodeFactory.markEndPosition();
+			tie(identifier, nameLocation) = expectIdentifierWithLocation();
+		}
 	}
 	ASTPointer<Expression> value;
 	if (_options.allowInitialValue)
