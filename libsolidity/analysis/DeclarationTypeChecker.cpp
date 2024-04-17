@@ -463,7 +463,7 @@ void DeclarationTypeChecker::endVisit(VariableDeclaration const& _variable)
 				typeLoc = (_variable.isConstant() || _variable.immutable()) ? DataLocation::Memory : DataLocation::Storage;
 				break;
 			case Location::Transient:
-				solAssert(false, "Transient storage type checking not implemented yet");
+				typeLoc = DataLocation::Transient;
 				break;
 			default:
 				solAssert(false, "");
@@ -489,7 +489,7 @@ void DeclarationTypeChecker::endVisit(VariableDeclaration const& _variable)
 				typeLoc = DataLocation::CallData;
 				break;
 			case Location::Transient:
-				solAssert(false, "Transient storage type checking not implemented yet");
+				solUnimplementedAssert(false, "Transient data location is only supported for value types.");
 				break;
 			case Location::Unspecified:
 				solAssert(!_variable.hasReferenceOrMappingType(), "Data location not properly set.");
@@ -510,6 +510,9 @@ void DeclarationTypeChecker::endVisit(VariableDeclaration const& _variable)
 		if (!allowed)
 			m_errorReporter.fatalTypeError(9259_error, _variable.location(), "Only constants of value type and byte array type are implemented.");
 	}
+
+	if (!type->isValueType() && typeLoc == DataLocation::Transient)
+		solUnimplementedAssert(false, "Transient data location is only supported for value types.");
 
 	_variable.annotation().type = type;
 }
