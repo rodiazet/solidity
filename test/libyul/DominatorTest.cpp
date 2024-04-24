@@ -36,7 +36,7 @@ typedef std::pair<std::string, std::string> Edge;
 
 struct TestVertex {
 	std::string name;
-	std::vector<std::shared_ptr<TestVertex>> successors;
+	std::vector<std::weak_ptr<TestVertex>> successors;
 
 	bool operator<(TestVertex const& _other) const
 	{
@@ -46,26 +46,27 @@ struct TestVertex {
 
 struct ForEachVertexSuccessorTest {
 	template<typename Callable>
-	void operator()(TestVertex _v, Callable&& _callable) const
+	void operator()(TestVertex const& _v, Callable&& _callable) const
 	{
 		for (auto const& w: _v.successors)
-			_callable(*w);
+			if(auto locked = w.lock())
+				_callable(*locked);
 	}
 };
 
 struct DominatorFinderTest
 {
 	DominatorFinderTest(
-		std::vector<std::string> _vertices,
-		std::vector<Edge> _edges,
-		std::vector<size_t> _expectedIdom,
-		std::map<std::string, size_t> _expectedDFSIndices,
-		std::map<size_t, std::vector<size_t>> _expectedDominatorTree
+		std::vector<std::string> const& _vertices,
+		std::vector<Edge> const& _edges,
+		std::vector<size_t> const& _expectedIdom,
+		std::map<std::string, size_t> const& _expectedDFSIndices,
+		std::map<size_t, std::vector<size_t>> const& _expectedDominatorTree
 	)
 	{
 		soltestAssert(!_vertices.empty() && !_edges.empty());
 
-		for (std::string name: _vertices)
+		for (std::string const& name: _vertices)
 			vertices.emplace(name, std::make_shared<TestVertex>(TestVertex{name, {}}));
 
 		soltestAssert(vertices.size() == _vertices.size());
