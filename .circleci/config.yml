@@ -1975,11 +1975,6 @@ workflows:
 
   nightly:
 
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          <<: *on_develop
-
     jobs:
       # Code Coverage enabled build and tests
       - b_ubu_codecov: *requires_nothing
@@ -2002,11 +1997,6 @@ workflows:
       - t_ubu_soltest_deprecated_evm_versions: *requires_b_ubu
 
   nightly-ossfuzz:
-
-    triggers:
-      - schedule:
-          cron: "0 0 * * *"
-          <<: *on_develop
 
     jobs:
       # OSSFUZZ builds and (regression) tests
