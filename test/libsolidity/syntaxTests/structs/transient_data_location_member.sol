@@ -2,4 +2,4 @@ struct S {
     int transient x;
 }
 // ----
-// ParserError 2314: (26-27): Expected ';' but got identifier
+// TypeError 6651: (15-30): Data location can only be specified for array, struct or mapping types, but "transient" was given.

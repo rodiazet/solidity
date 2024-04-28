@@ -886,6 +886,20 @@ ASTPointer<VariableDeclaration> Parser::parseVariableDeclaration(
 					}
 				}
 			}
+			else if (
+					token == Token::Identifier &&
+					m_scanner->currentLiteral() == "transient" &&
+					m_scanner->peekNextToken() != Token::Assign &&
+					m_scanner->peekNextToken() != Token::Semicolon &&
+					m_scanner->peekNextToken() != Token::Comma &&
+					m_scanner->peekNextToken() != Token::RParen
+				)
+				{
+					if (location != VariableDeclaration::Location::Unspecified)
+						parserError(ErrorId{3548}, "Location already specified.");
+					else
+						location = VariableDeclaration::Location::Transient;
+				}
 			else
 				break;
 			nodeFactory.markEndPosition();
@@ -899,23 +913,6 @@ ASTPointer<VariableDeclaration> Parser::parseVariableDeclaration(
 	{
 		nodeFactory.markEndPosition();
 		tie(identifier, nameLocation) = expectIdentifierWithLocation();
-		if (
-			*identifier == "transient" &&
-			m_scanner->currentToken() == Token::Identifier &&
-			(
-				_options.allowLocationSpecifier ||
-				_options.kind == VarDeclKind::State
-			)
-		)
-		{
-			if (location != VariableDeclaration::Location::Unspecified)
-				parserError(ErrorId{3548}, "Location already specified.");
-			else
-				location = VariableDeclaration::Location::Transient;
-
-			nodeFactory.markEndPosition();
-			tie(identifier, nameLocation) = expectIdentifierWithLocation();
-		}
 	}
 	ASTPointer<Expression> value;
 	if (_options.allowInitialValue)

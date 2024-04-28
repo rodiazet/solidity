@@ -463,6 +463,12 @@ void DeclarationTypeChecker::endVisit(VariableDeclaration const& _variable)
 				typeLoc = (_variable.isConstant() || _variable.immutable()) ? DataLocation::Memory : DataLocation::Storage;
 				break;
 			case Location::Transient:
+				if (_variable.isConstant() || _variable.immutable())
+					m_errorReporter.declarationError(
+						2197_error,
+						_variable.location(),
+						"Transient cannot be used as data location for constant or immutable variables."
+					);
 				typeLoc = DataLocation::Transient;
 				break;
 			default:
